@@ -242,8 +242,8 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const updateAccountDetails = asyncHandler(async (req, res) => {
     const { fullName, email } = req.body
 
-    if (!fullName || !email) {
-        throw new ApiError(400, "All fields are required")
+    if (!fullName?.trim() && !email?.trim()) {
+        throw new ApiError(400, "You have to update field to make changes")
     }
 
     const user = await User.findByIdAndUpdate(
