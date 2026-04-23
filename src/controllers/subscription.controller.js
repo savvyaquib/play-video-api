@@ -40,7 +40,43 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
 // controller to return subscriber list of a channel
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-    const { channelId } = req.params
+    const { subscriberId } = req.params
+
+    if (!isValidObjectId(subscriberId)) {
+        throw new ApiError(400, "Invalid subscriberId")
+    }
+
+    const channel = await User.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(subscriberId) }
+        },
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers"
+            }
+        },
+        {
+            $addFields: {
+                subscribersCount: {
+                    $size: "$subscribers"
+                }
+            }
+
+        }
+    ])
+    if (!channel) {
+        throw new ApiError(400, "This channel doesn't exist")
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, channel[0], "Subscribers fetched successfully"))
+
+
+
 })
 
 // controller to return channel list to which user has subscribed
