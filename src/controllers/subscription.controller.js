@@ -64,9 +64,18 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
                     $size: "$subscribers"
                 }
             }
-
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                subscribersCount: 1
+            }
         }
     ])
+
+    console.log(channel)
+
     if (!channel) {
         throw new ApiError(400, "This channel doesn't exist")
     }
@@ -74,9 +83,6 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(new ApiResponse(200, channel[0], "Subscribers fetched successfully"))
-
-
-
 })
 
 // controller to return channel list to which user has subscribed
