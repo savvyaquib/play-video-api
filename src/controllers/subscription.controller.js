@@ -87,15 +87,15 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 // controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
-    const { subscriberId } = req.params
+    const { channelId } = req.params
 
-    if (!isValidObjectId(subscriberId)) {
-        throw new ApiError(400, "Invalid subscriberId")
+    if (!isValidObjectId(channelId)) {
+        throw new ApiError(400, "Invalid channelId")
     }
 
     const subscriber = await User.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(subscriberId) }
+            $match: { _id: new mongoose.Types.ObjectId(channelId) }
         },
         {
             $lookup: {
