@@ -107,9 +107,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                channelsSubscribedToCount: {
-                    $size: "$subscribedTo"
-                }
+                channelsSubscribedList: "$subscribedTo"
             }
         },
         {
@@ -119,7 +117,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
                 email: 1,
                 avatar: 1,
                 coverImage: 1,
-                channelsSubscribedToCount: 1,
+                channelsSubscribedList: 1,
                 isSubscribed: 1
             }
         }
